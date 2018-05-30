@@ -102,31 +102,6 @@ def test(codeBook, histograms):
 
     print('Acertos: ', str(100 * right / len(testClassList)), ' %')
 
-
-def test2(codeBook, histograms):
-    testInfoList, classCount = getFilesAndDescriptors("Images/Test/")
-
-    testClassList = extractTuple(testInfoList, 0)
-    testDescList = np.array(extractTuple(testInfoList, 1))
-
-    histList = []
-    for category in histograms:
-        histList.append(histograms[category])
-
-    kmeans = KMeans(n_clusters=len(histList), random_state=0).fit(histList)
-
-    for imDesc in testDescList:
-        imPredict = codeBook.predict(imDesc)
-        imHist = makeHistogram(imPredict, codeBook.n_clusters)
-
-        i = kmeans.predict([imHist])[0]
-
-        for key, value in histograms.items():
-            if np.array_equal(value, kmeans.cluster_centers_[i]):
-                print(key)
-
-
-
 def main():
     trainInfoList, classCount = getFilesAndDescriptors("Images/Train/")
 
