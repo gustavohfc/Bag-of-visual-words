@@ -92,15 +92,29 @@ def test(codeBook, histograms):
     testClassList = extractTuple(testInfoList, 0)
     testDescList = np.array(extractTuple(testInfoList, 1))
 
-    right = 0
+    correct_total = 0
+
+    correct_per_category = {}
+    images_per_category = {}
 
     for imDesc, imClass in zip(testDescList, testClassList):
         category = classifyImage(imDesc, codeBook, histograms)
         
-        if imClass == category:
-            right += 1
+        if category not in images_per_category:
+            correct_per_category[category] = 0
+            images_per_category[category] = 0
 
-    print('Acertos: ', str(100 * right / len(testClassList)), ' %')
+        if imClass == category:
+            correct_total += 1
+            correct_per_category[category] += 1
+
+        images_per_category[category] += 1
+
+    print('Acertos total:\t', str(100 * correct_total / len(testClassList)), ' %')
+
+    for category in images_per_category:
+        print(category,' : ', str(100 * correct_per_category[category] / images_per_category[category]), ' %')
+
 
 def main():
     trainInfoList, classCount = getFilesAndDescriptors("Images/Train/")
